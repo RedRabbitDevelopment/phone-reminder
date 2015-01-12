@@ -3,11 +3,13 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var xml2js = require('xml2js');
 var app = express();
+var mongo = require('./utils/mongo');
 
 var twilio = require('./utils/twilio');
 var config = require('./config');
 
 app.get('/keep-alive', function(req, res) {
+  console.log('keeping alive...');
   res.json({success: true});
 });
 
@@ -30,6 +32,8 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
   res.end(builder.buildObject(xml));
 });
 
-app.listen(config.server.port, function() {
-  console.log('listening on port ' + config.server.port);
-});
+mongo.dbPromise.then(function(db) {
+  app.listen(config.server.port, function() {
+    console.log('listening on port ' + config.server.port);
+  });
+}).done();
