@@ -17,12 +17,12 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
   if(req.body.To && req.body.From && req.body.Body) {
     if(req.body.Body.trim().match(/DONE(.|!)?/i)) {
       xml.Response = 'Thanks!';
-      twilio.sendMessage(config.twilio.adminNumber, config.twilio.carrawayNumber, 
+      twilio.sendMessage(config.twilio.adminNumber, config.twilio.CarawayNumber, 
         'The building security has been taken care of tonight!');
     } else {
-      xml.Response = 'Forwarding your message on to Brother Carraway. Please note that ' +
+      xml.Response = 'Forwarding your message on to Brother Caraway. Please note that ' +
         'if you are done, you should reply "Done" to this message (with no other text).';
-      twilio.sendMessage(config.twilio.adminNumber, config.twilio.carrawayNumber, 
+      twilio.sendMessage(config.twilio.adminNumber, config.twilio.CarawayNumber, 
         'Forwarded message from "' + req.body.From + '": "' + req.body.Body + '"');
     }
   }
