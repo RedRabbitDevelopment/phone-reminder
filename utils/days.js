@@ -17,4 +17,3 @@ module.exports = {
     return now.getHours() + (now.getMinutes() / 60);
   }
 };
-console.log(module.exports.time());
