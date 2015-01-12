@@ -13,6 +13,7 @@ module.exports = {
     return now;
   },
   time: function() {
+    return 22.75;
     var now = this.getDate();
     return now.getHours() + (now.getMinutes() / 60);
   }

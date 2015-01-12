@@ -22,16 +22,10 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
       xml.Response = 'Thanks!';
       twilio.sendMessage(config.twilio.adminNumber, config.twilio.carawayNumber, 
         'The building security has been taken care of tonight!');
-      mongo.getCollection('days').then(function(collection) {
-        return collection.insertAsync({
-          day: days.today(),
-          complete: true
-        });
-      }).done();
+      mongo.setToday({complete: true}).done();
     } else if(req.body.Body.trim().match(/SUBSCRIBE(.|!)?/i)) {
       // To do: test the DB insert
-      var userOnDuty = { 'reminderNumber' : req.body.From };
-      mongo.reminder.insert( userOnDuty );
+      mongo.setOnDuty({phoneNumber: req.body.From}).done();
       xml.Response = 'You have subscribed to secure the church building!';
     } else {
       xml.Response = 'Forwarding your message on to Brother Caraway. Please note that ' +
