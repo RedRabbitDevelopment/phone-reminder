@@ -23,8 +23,8 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
         'The building security has been taken care of tonight!');
     } if(req.body.Body.trim().match(/SUBSCRIBE(.|!)?/i)) {
       // To do: test the DB insert
-      var userOnDuty = { 'reminder-number' : req.body.From };
-      mongo.insert( userOnDuty );
+      var userOnDuty = { 'reminderNumber' : req.body.From };
+      mongo.reminder.insert( userOnDuty );
       xml.Response = 'You have subscribed to secure the church building!';
     } else {
       xml.Response = 'Forwarding your message on to Brother Caraway. Please note that ' +

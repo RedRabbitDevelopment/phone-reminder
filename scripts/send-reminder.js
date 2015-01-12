@@ -21,12 +21,12 @@ var SendReminderScript = module.exports = Starter.createScript({
                 'When done, reply "Done" to this message. Any other reply to ' +
                 'this message will be forwarded on to Brother Caraway. Or you can ' +
                 'text him directly at ' + config.twilio.carawayNumber + '.';
-              reminderNumber = mongo.getCollection('reminder-number');
+              to = mongo.getCollection('reminder').reminderNumber;
               break;
             case 'ExtraReminder':
               message = 'Please don\'t forget to reply "Done" after you\'ve locked ' +
                 'up, otherwise you can expect a call from Brother Caraway.';
-              reminderNumber = mongo.getCollection('reminder-number');
+              to = mongo.getCollection('reminder').reminderNumber;
               break;
             case 'TextCaraway':
               message = 'It looks like no one closed up at the church today. Sorry.';
