@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var xml2js = require('xml2js');
 var app = express();
 var mongo = require('./utils/mongo');
+var days = require('./utils/days');
 
 var twilio = require('./utils/twilio');
 var config = require('./config');
@@ -21,6 +22,12 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
       xml.Response = 'Thanks!';
       twilio.sendMessage(config.twilio.adminNumber, config.twilio.carrawayNumber, 
         'The building security has been taken care of tonight!');
+      mongo.getCollection('days').then(function(collection) {
+        return collection.insertAsync({
+          day: days.today(),
+          complete: true
+        });
+      }).done();
     } else {
       xml.Response = 'Forwarding your message on to Brother Carraway. Please note that ' +
         'if you are done, you should reply "Done" to this message (with no other text).';
