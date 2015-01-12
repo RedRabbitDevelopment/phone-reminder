@@ -21,6 +21,11 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
       xml.Response = 'Thanks!';
       twilio.sendMessage(config.twilio.adminNumber, config.twilio.carawayNumber, 
         'The building security has been taken care of tonight!');
+    } if(req.body.Body.trim().match(/SUBSCRIBE(.|!)?/i)) {
+      // To do: test the DB insert
+      var userOnDuty = { 'reminder-number' : req.body.From };
+      mongo.insert( userOnDuty );
+      xml.Response = 'You have subscribed to secure the church building!';
     } else {
       xml.Response = 'Forwarding your message on to Brother Caraway. Please note that ' +
         'if you are done, you should reply "Done" to this message (with no other text).';
