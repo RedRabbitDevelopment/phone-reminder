@@ -1,6 +1,6 @@
  
-var Starter = require('../models/cronStarter');
-var config = require('../models/config');
+var Starter = require('../utils/cronStarter');
+var config = require('../config');
 var Promise = require('bluebird');
 var request = Promise.promisify(require('request').get);
 
