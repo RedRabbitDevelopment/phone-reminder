@@ -19,7 +19,6 @@ var SendReminderScript = module.exports = Starter.createScript({
       ]).spread(function(day, user) {
         if(user && (!day || !day.complete)) {
           var message, to, from;
-          var message, to, from;
           switch(type) {
             case 'sendReminder':
               message = 'Just a reminder to lock up the church tonight! ' +

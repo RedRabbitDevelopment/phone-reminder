@@ -20,6 +20,20 @@ module.exports = Mongo = {
     Promise.promisifyAll(collection);
     return collection;
   },
+  log: function(name, obj) {
+    var collection = this.getCollection('logs');
+    obj.name = name;
+    obj.date = new Date();
+    return collection.insertAsync(obj);
+  },
+  append: function(promise, set) {
+    var logs = this.getCollection('logs');
+    return promise.then(function(docs) {
+      return logs.updateAsync({
+        _id: docs[0]._id
+      }, {$set: set});
+    });
+  },
   setToday: function(set) {
     var collection = this.getCollection('days');
     return collection.updateAsync({

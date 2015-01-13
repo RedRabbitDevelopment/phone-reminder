@@ -18,6 +18,7 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
   res.set('Content-Type', 'text/xml');
   var xml = {Response: {}};
   if(req.body.To && req.body.From && req.body.Body) {
+    var incoming = mongo.log('incoming', req.body);
     if(req.body.Body.trim().match(/DONE(.|!)?/i)) {
       xml.Response = 'Thanks!';
       twilio.sendMessage(config.twilio.adminNumber, config.twilio.carawayNumber, 
@@ -33,6 +34,7 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
       twilio.sendMessage(config.twilio.adminNumber, config.twilio.carawayNumber, 
         'Forwarded message from "' + req.body.From + '": "' + req.body.Body + '"');
     }
+    mongo.append(incoming, {response: xml.Response}).done();
   }
   var builder = new xml2js.Builder();
   res.end(builder.buildObject(xml));
