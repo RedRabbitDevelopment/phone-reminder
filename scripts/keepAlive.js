@@ -8,6 +8,6 @@ module.exports = Starter.createScript({
   name: 'Keep Server Alive',
   filename: __filename,
   process: function() {
-    return request(config.server.host + '/keep-alive');
+    return request(config.URL + '/keep-alive');
   }
 });
