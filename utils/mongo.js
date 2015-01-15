@@ -8,7 +8,7 @@ var uri = 'mongodb://';
 if(config.username && config.password) {
   uri += config.username + ':' + config.password + '@';
 }
-uri += config.host + '/' + config.db;
+uri += config.host + ':' + config.port + '/' + config.db;
 
 var Mongo;
 module.exports = Mongo = {
