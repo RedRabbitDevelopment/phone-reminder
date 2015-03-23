@@ -34,6 +34,15 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
     } else if(match = message.match(/^TWILIO TEST (.*?)$/i)) {
       response = 'Thanks for testing: "' + match[1] + '".';
     } else if(message.match(/^unsubscribe/i)) {
+      mongo.getOnDuty().then(function(user) {
+        if(user && user.phoneNumber === req.body.From) {
+          twilio.sendMessage(config.twilio.adminNumber, config.twilio.carawayNumber, 
+            'Current subscriber to building security has unsubscribed. Now no one is ' +
+            'subscribed. Please either notify the currently assigned person to text ' + 
+            '"subscribe" to this number, or give their number to Nathan at 949-427-0061. Thanks!');
+          return mongo.setOnDuty({phoneNumber: null});
+        }
+      }).done();
       response = '';
     } else {
       response = 'Forwarding your message on to Brother Caraway. Please note that ' +

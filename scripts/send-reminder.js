@@ -40,7 +40,9 @@ var SendReminderScript = module.exports = Starter.createScript({
               throw new Error('Unknown type "' + type + '".');
           }
           from = config.twilio.adminNumber;
-          return twilio.sendMessage(from, to, message);
+          if(from && to && message) {
+            return twilio.sendMessage(from, to, message);
+          }
         };
       });
     });
