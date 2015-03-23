@@ -20,23 +20,26 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
   var xml = {Response: {}};
   if(req.body.To && req.body.From && req.body.Body) {
     var incoming = mongo.log('incoming', req.body);
+    var message = req.body.Body.trim();
     var match = '';
-    if(req.body.Body.trim().match(/^DONE(.|!)?$/i)) {
+    if(message.match(/^DONE(.|!)?$/i)) {
       response = 'Thanks!';
       twilio.sendMessage(config.twilio.adminNumber, config.twilio.carawayNumber, 
         'The building security has been taken care of tonight!');
       mongo.setToday({complete: true}).done();
-    } else if(req.body.Body.trim().match(/^SUBSCRIBE(.|!)?$/i)) {
+    } else if(message.match(/^SUBSCRIBE(.|!)?$/i)) {
       // To do: test the DB insert
       mongo.setOnDuty({phoneNumber: req.body.From}).done();
       response = 'You have subscribed to secure the church building!';
-    } else if(match = req.body.Body.trim().match(/^TWILIO TEST (.*?)$/i)) {
+    } else if(match = message.match(/^TWILIO TEST (.*?)$/i)) {
       response = 'Thanks for testing: "' + match[1] + '".';
+    } else if(message.match(/^unsubscribe/i)) {
+      response = '';
     } else {
       response = 'Forwarding your message on to Brother Caraway. Please note that ' +
         'if you are done, you should reply "Done" to this message (with no other text).';
       twilio.sendMessage(config.twilio.adminNumber, config.twilio.carawayNumber, 
-        'Forwarded message from "' + req.body.From + '": "' + req.body.Body + '"');
+        'Forwarded message from "' + req.body.From + '": "' + message + '"');
     }
     mongo.append(incoming, {response: response}).done();
     xml.Response.Message = response;
