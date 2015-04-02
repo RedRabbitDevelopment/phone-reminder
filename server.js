@@ -16,7 +16,7 @@ app.get('/keep-alive', function(req, res) {
 
 app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res) {
   res.set('Content-Type', 'text/xml');
-  var response = '';
+  var response = false;
   var xml = {Response: {}};
   if(req.body.To && req.body.From && req.body.Body) {
     var incoming = mongo.log('incoming', req.body);
@@ -43,7 +43,6 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
           return mongo.setOnDuty({phoneNumber: null});
         }
       }).done();
-      response = '';
     } else {
       response = 'Forwarding your message on to Brother Caraway. Please note that ' +
         'if you are done, you should reply "Done" to this message (with no other text).';
@@ -51,7 +50,9 @@ app.post('/message', bodyParser.urlencoded({extended: true}), function(req, res)
         'Forwarded message from "' + req.body.From + '": "' + message + '"');
     }
     mongo.append(incoming, {response: response}).done();
-    xml.Response.Message = response;
+    if(response) {
+      xml.Response.Message = response;
+    }
   }
   var builder = new xml2js.Builder();
   res.end(builder.buildObject(xml));
