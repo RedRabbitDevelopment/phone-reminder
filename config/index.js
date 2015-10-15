@@ -13,7 +13,7 @@ config = (function() {
   }
 })();
 
-if (mUrl = process.env.MONGO_URI) {
+if (mUrl = process.env.MONGOLAB_URI) {
   m_regex = /^mongodb:\/\/(.*?):(.*?)@(.*?):(.*?)\/(.*?)$/;
   config.mongo = m = {};
   _ref = mUrl.match(m_regex), ignore = _ref[0], m.username = _ref[1], m.password = _ref[2], m.host = _ref[3], m.port = _ref[4], m.db = _ref[5];
